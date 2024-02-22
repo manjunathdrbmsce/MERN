@@ -1,0 +1,658 @@
+Setup:
+=======
+Install vs code
+
+create folder MERN
+go to terminal
+d:\MERN\Demo> npm init vite     -->to create react app
+
+Enter project name : client
+select React
+select JavaScript
+
+Now run
+cd client
+npm install
+npm run dev
+
+http://localhost:5173/ to view front-end page.
+
+install other packages:
+npm install bootstrap axios react-router-dom    --> for css/ http request / routing
+
+
+Front-end:
+==========
+Basic code:
+
+import React from "react";
+function CreateUser () {
+    return(
+        <div>
+            Create Users
+        </div>
+    )
+}
+
+export default CreateUser;
+
+main.jsx
+========
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+
+
+
+App.jsx
+=======
+import { useState } from 'react'
+import './App.css'
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import Users from './Users'
+import CreateUsers from './CreateUser'
+import UpdateUsers from './UpdateUser'
+
+
+function App() {
+  const [count, setCount] = useState(0)
+
+  return (
+    <div>
+     <BrowserRouter>
+     <Routes>
+      <Route path='/' element={<Users />}></Route>
+      <Route path='/create' element={<CreateUsers />}></Route>
+      <Route path='/update' element={<UpdateUsers />}></Route>
+     </Routes>
+     </BrowserRouter>
+    </div>
+  )
+}
+
+export default App
+
+
+Users.jsx
+=========
+import React, { useState } from "react";
+import {Link} from "react-router-dom";
+
+function Users () {
+ const [users, setUsers] = useState([{Name: "selva", Email: "selva.cse@bmsce.ac.in", Age: 40}])
+           
+    
+    return(
+        <div className= "d-flex vh-100 bg-primary justify-content-center align-items-center">
+            <div className='w-50 bg-white rounded p-3'>
+                <Link to="/create" className='btn btn-success'>Add +</Link>
+                <table className='table'>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Age</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            users.map((user)=>{
+                                return <tr>
+                                    <td>{user.Name}</td>
+                                    <td>{user.Email}</td>
+                                    <td>{user.Age}</td>
+                                    <td>
+                                    <Link to="/update" className='btn btn-success'>Update</Link>
+                                    <button>Delete</button>
+                                    </td>
+                                </tr>
+                            })
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
+}
+
+export default Users;
+
+
+CreateUser.jsx
+==============
+import React from "react";
+function CreateUser () {
+    return(
+        <div className= "d-flex vh-100 bg-primary justify-content-center align-items-center">
+            <div className='w-50 bg-white rounded p-3'>
+                <form>
+                    <h2> Add User</h2>
+                    <div className="mb-2">
+                        <lable htmlFor="">Name</lable>
+                        <input type="text" placeholder="Enter Name" className="form-control" />
+                   
+                    </div>
+                    <div className="mb-2">
+                        <lable htmlFor="">Email</lable>
+                        <input type="text" placeholder="Enter Email" className="form-control" />
+                   
+                    </div>
+                    <div className="mb-2">
+                        <lable htmlFor="">Age</lable>
+                        <input type="text" placeholder="Enter Age" className="form-control" />
+                   
+                    </div>
+                    <button  className="btn btn-success">Submit</button>
+                </form>
+        </div>    
+        </div>
+    )
+}
+
+export default CreateUser;
+
+
+UpdateUser.jsx
+==============
+import React from "react";
+function UpdateUser () {
+    return(
+        <div className= "d-flex vh-100 bg-primary justify-content-center align-items-center">
+        <div className='w-50 bg-white rounded p-3'>
+            <form>
+                <h2> Update User</h2>
+                <div className="mb-2">
+                    <lable htmlFor="">Name</lable>
+                    <input type="text" placeholder="Enter Name" className="form-control" />
+               
+                </div>
+                <div className="mb-2">
+                    <lable htmlFor="">Email</lable>
+                    <input type="text" placeholder="Enter Email" className="form-control" />
+               
+                </div>
+                <div className="mb-2">
+                    <lable htmlFor="">Age</lable>
+                    <input type="text" placeholder="Enter Age" className="form-control" />
+               
+                </div>
+                <button  className="btn btn-success">Update</button>
+            </form>
+    </div>    
+    </div>
+
+    )
+}
+
+export default UpdateUser;
+
+
+Back-end:
+==========
+create server folder
+go to terminal
+d:\MERN\server> npm init -y
+
+install express framework, mongoose database, cors to connect front-end with backend, nodemon to sync.
+
+d:\MERN\server> npm install express mongoose cors nodemon
+
+add the nodemon in package.json
+"scripts": {
+"test":"echo \"Error:no test specified\" && exit 1",
+"start": "nodemon index.js"
+}
+
+crete new file index.js
+=======================
+
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
+
+d:\MERN\server> npm start
+
+database
+=========
+
+mongodb://localhost:27017
+mongodb+srv://selvaBMS:*****@cluster0.eli2h0j.mongodb.net/test
+
+mongodb+srv://selvaBMS:selvaBMS@cluster0.eli2h0j.mongodb.net/crud?retryWrites=true&w=majority
+
+create users.js   --> new file under models folder
+===============
+const mongoose = require('mongoose')
+
+const UserSchema = new mongoose.Schema({
+name: String,
+email: String,
+age: Number
+})
+
+const UserModel = mongoose.model("users",UserSchema)
+module.exports = UserModel
+
+
+modify index.js
+===============
+const express = require('express')
+const mongoose = require('mongoose')
+const cors = require('cors')
+const UserModel = require('./models/Users')
+
+const app = express()
+const port = 3000
+app.use(cors())
+app.use(express.json())
+//mongoose.connect("mongodb+srv://selvaBMS:selvaBMS@cluster0.eli2h0j.mongodb.net/crud?retryWrites=true&w=majority")
+mongoose.connect("mongodb://localhost:27017/crud")
+
+app.post("/createuser", (req,res) => {
+    UserModel.create(req.body)
+    .then(users => res.json(users))
+    .catch(err => res.json(err))
+})
+
+app.listen(port, () => {
+  console.log('Server is running')
+})
+
+
+modify front-end createUser.jsx
+===============================
+import React, { useState } from "react";
+import {useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+function CreateUser () {
+
+    const [name, setName]= useState()
+    const [email, setEmail]= useState()
+    const [age, setAge]= useState()
+    const navigate = useNavigate()
+    
+    const Submit = (e) => {
+        e.preventDefault();
+        axios.post("http://localhost:3001/createuser", {name,email,age})
+        .then(result => console.log(result))
+        .catch(err => console.log(err))
+        navigate('/')
+    }
+    return(
+        <div className= "d-flex vh-100 bg-primary justify-content-center align-items-center">
+            <div className='w-50 bg-white rounded p-3'>
+                <form onSubmit={Submit}>
+                    <h2> Add User</h2>
+                    <div className="mb-2">
+                        <lable htmlFor="">Name</lable>
+                        <input type="text" placeholder="Enter Name" className="form-control" 
+                        onChange={(e) => setName(e.target.value)}/>
+                   
+                    </div>
+                    <div className="mb-2">
+                        <lable htmlFor="">Email</lable>
+                        <input type="text" placeholder="Enter Email" className="form-control" 
+                        onChange={(e) => setEmail(e.target.value)}/>
+                   
+                    </div>
+                    <div className="mb-2">
+                        <lable htmlFor="">Age</lable>
+                        <input type="text" placeholder="Enter Age" className="form-control" 
+                        onChange={(e) => setAge(e.target.value)}/>
+                   
+                    </div>
+                    <button  className="btn btn-success">Submit</button>
+                </form>
+        </div>    
+        </div>
+    )
+}
+
+export default CreateUser;
+
+Create new terminal
+======================
+Run client
+d:\MERN\client> npm run dev
+
+test adding/creating user from front-end verify in back-end
+
+Next add get api in back-end code:
+==================================
+
+changes in front-end to display the get data in Users.jsx
+
+import React, { useState } from "react";
+import {Link} from "react-router-dom";
+
+function Users () {
+ const [users, setUsers] = useState([])
+           
+    useEffect (()=>{
+        axios.get('http://localhost:3001')
+        .then(result => setUsers(result.data))
+        .catch(err => console.log(err))
+    },[])
+    return(
+        <div className= "d-flex vh-100 bg-primary justify-content-center align-items-center">
+            <div className='w-50 bg-white rounded p-3'>
+                <Link to="/create" className='btn btn-success'>Add +</Link>
+                <table className='table'>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Age</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            users.map((user)=>{
+                                return <tr>
+                                    <td>{user.name}</td>
+                                    <td>{user.email}</td>
+                                    <td>{user.age}</td>
+                                    <td>
+                                    <Link to="/update" className='btn btn-success'>Update</Link>
+                                    <button className='btn btn-danger'>Delete</button>
+                                    </td>
+                                </tr>
+                            })
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
+}
+
+export default Users;
+
+
+index.js
+========
+const express = require('express')
+const mongoose = require('mongoose')
+const cors = require('cors')
+const UserModel = require('./Users')
+
+const app = express()
+const port = 3001
+app.use(cors())
+app.use(express.json())
+//mongoose.connect("mongodb+srv://selvaBMS:selvaBMS@cluster0.eli2h0j.mongodb.net/crud?retryWrites=true&w=majority")
+mongoose.connect("mongodb://localhost:27017/crud")
+
+app.get('/', (req,res) =>{
+    UserModel.find({})
+    .then(users => res.json(users))
+    .catch(err => res.json(err))
+})
+
+app.post("/createuser", (req,res) => {
+    UserModel.create(req.body)
+    .then(users => res.json(users))
+    .catch(err => res.json(err))
+})
+
+app.listen(port, () => {
+  console.log('Server is running')
+})
+
+
+next update function:
+======================
+
+add id in the app.jsx
+
+      <Route path='/update/:id' element={<UpdateUsers />}></Route>
+
+modify user.jsx : pass id in the update button
+
+  <Link to={`/update/${user._id}`} className='btn btn-success'>Update</Link>
+
+modify index.js:
+
+app.get('/getuser/:id', (req,res) =>{
+  const id = req.params.id;
+  UserModel.findById({_id:id})
+  .then(users => res.json(users))
+  .catch(err => res.json(err))
+})
+
+modify code in updateUser.jsx:
+==============================
+
+import React, {useState, useEffect} from "react";
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+function UpdateUser () {
+
+    const {id} = useParams()
+    const [name, setName]= useState()
+    const [email, setEmail]= useState()
+    const [age, setAge]= useState()
+    const navigate = useNavigate()
+
+    useEffect (()=>{
+        axios.get('http://localhost:3001/getuser/'+id)
+        .then(result => console.log(result))
+        .catch(err => console.log(err))
+    })
+
+    return(
+        <div className= "d-flex vh-100 bg-primary justify-content-center align-items-center">
+        <div className='w-50 bg-white rounded p-3'>
+            <form>
+                <h2> Update User</h2>
+                <div className="mb-2">
+                    <lable htmlFor="">Name</lable>
+                    <input type="text" placeholder="Enter Name" className="form-control" />
+               
+                </div>
+                <div className="mb-2">
+                    <lable htmlFor="">Email</lable>
+                    <input type="text" placeholder="Enter Email" className="form-control" />
+               
+                </div>
+                <div className="mb-2">
+                    <lable htmlFor="">Age</lable>
+                    <input type="text" placeholder="Enter Age" className="form-control" />
+               
+                </div>
+                <button  className="btn btn-success">Update</button>
+            </form>
+    </div>    
+    </div>
+
+    )
+}
+
+export default UpdateUser;
+
+
+
+now connect recieved data from db to fields to update in UpdateUser.jsx
+=======================================================================
+
+
+  useEffect (()=>{
+        axios.get('http://localhost:3001/getuser/'+id)
+        .then(result => console.log(result))
+              setName (result.data.name)
+              setEmail (result.data.email)
+              setAge (result.data.age)
+        .catch(err => console.log(err))
+    },[])
+
+   const Update = (e) => {
+        e.preventDefault();
+        axios.put("http://localhost:3001/updateuser/"+id, {name,email,age})
+        .then(result => console.log(result))
+        .catch(err => console.log(err))
+        navigate('/')
+     }
+    return(
+        <div className= "d-flex vh-100 bg-primary justify-content-center align-items-center">
+        <div className='w-50 bg-white rounded p-3'>
+            <form onSubmit ={Update}>
+                <h2> Update User</h2>
+                <div className="mb-2">
+                    <lable htmlFor="">Name</lable>
+                    <input type="text" placeholder="Enter Name" className="form-control" 
+                    value ={name} onChange={(e) => setName(e.target.value)}/>
+               
+                </div>
+                <div className="mb-2">
+                    <lable htmlFor="">Email</lable>
+                    <input type="text" placeholder="Enter Email" className="form-control" 
+                    value ={email} onChange={(e) => setEmail(e.target.value)}/>
+               
+                </div>
+                <div className="mb-2">
+                    <lable htmlFor="">Age</lable>
+                    <input type="text" placeholder="Enter Age" className="form-control" 
+                    value ={age} onChange={(e) => setAge(e.target.value)}/>
+               
+                </div>
+                <button  className="btn btn-success">Update</button>
+            </form>
+
+
+
+add index.js
+==================
+
+app.put('/updateuser/:id', (req,res) =>{
+  const id = req.params.id;
+  UserModel.findByIdAndUpdate({_id:id}, 
+    {name: req.body.name,
+    email: req.body.email,
+    age: req.body.age})
+  .then(users => res.json(users))
+  .catch(err => res.json(err))
+})
+
+
+complete code of UpdateUser.jsx
+===============================
+
+import React, {useState, useEffect} from "react";
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+function UpdateUser () {
+
+    const {id} = useParams()
+    const [name, setName]= useState()
+    const [email, setEmail]= useState()
+    const [age, setAge]= useState()
+    const navigate = useNavigate()
+
+    useEffect (()=>{
+        axios.get('http://localhost:3001/getuser/'+id)
+        .then(result => {console.log(result)
+              setName(result.data.name)
+              setEmail(result.data.email)
+              setAge(result.data.age)}) 
+             
+        .catch(err => console.log(err))
+    }, [])
+
+     const Update = (e) => {
+        e.preventDefault();
+        axios.put("http://localhost:3001/updateuser/"+id, {name,email,age})
+        .then(result => console.log(result))
+        .catch(err => console.log(err))
+        navigate('/')
+     }
+    return(
+        <div className= "d-flex vh-100 bg-primary justify-content-center align-items-center">
+        <div className='w-50 bg-white rounded p-3'>
+            <form onSubmit ={Update}>
+                <h2> Update User</h2>
+                <div className="mb-2">
+                    <lable htmlFor="">Name</lable>
+                    <input type="text" placeholder="Enter Name" className="form-control" 
+                    value ={name} onChange={(e) => setName(e.target.value)}/>
+               
+                </div>
+                <div className="mb-2">
+                    <lable htmlFor="">Email</lable>
+                    <input type="text" placeholder="Enter Email" className="form-control" 
+                    value ={email} onChange={(e) => setEmail(e.target.value)}/>
+               
+                </div>
+                <div className="mb-2">
+                    <lable htmlFor="">Age</lable>
+                    <input type="text" placeholder="Enter Age" className="form-control" 
+                    value ={age} onChange={(e) => setAge(e.target.value)}/>
+               
+                </div>
+                <button  className="btn btn-success">Update</button>
+            </form>
+    </div>    
+    </div>
+
+    )
+}
+
+export default UpdateUser;
+
+
+Delete function:
+
+Users.jsx file: --> add onclick event
+
+ <button className='btn btn-danger' onClick={(e) => handleDelete(user._id)}>Delete</button>
+
+--> Add handleDelete below this code
+   useEffect (()=>{
+        axios.get('http://localhost:3001')
+        .then(result => setUsers(result.data))
+        .catch(err => console.log(err))
+    }, [])
+-->
+
+const handleDelete =(id) => {
+    axios.delete('http://localhost:3001/deleteuser/'+id)
+    .then(res=> console.log(res))
+    .catcg(err => console.log(err))
+   navigate('/')
+}
+
+
+Goto index.js  --> write delete api
+==============
+
+app.delete('/deleteuser/:id', (req,res) =>{
+  const id = req.params.id;
+  UserModel.findByIdAndDelete({_id:id})
+  .then(res => res.json(res))
+  .catch(err => res.json(err))
+
+})
+
+
+
+

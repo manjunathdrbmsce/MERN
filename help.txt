@@ -1,0 +1,21 @@
+create folder MERN
+go to terminal
+d:\MERN\Demo> npm init vite     -->to create react app
+
+Enter project name : client
+select React
+select JavaScript
+
+Now run
+cd client
+npm install
+npm run dev
+
+http://localhost:5173/ to view front-end page.
+
+install other packages:
+npm install bootstrap axios react-router-dom      --> for css/ http request / routing
+
+
+
+
